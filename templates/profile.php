@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="uva, research, collaboration, professors">
 
-    <link rel="icon" type="image/x-icon" href="/db2nb/connectuva/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/tempfordummies/favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -52,24 +52,23 @@
         <h3>
 
         </h3>
-        <form action="profile.php" method="post">
-            <button type="submit" class="btn btn-danger">DELETE PROFILE</button>
-            <input type="hidden" name="delete" value="1" />
-        </form>
-        
+        <button type="submit" class="btn btn-danger" id="delProfile" >DELETE PROFILE</button>
+        <input type="hidden" name="delete" value="1" />        
     </div>
 
     <?php include "templates/footer.php"?>
 </body>
     <script type="text/javascript">
-        let url = "<?=$this->url?>api/getProfile";
+        let getURL = "<?=$this->url?>api/getProfile";
 
         const params = new URLSearchParams(window.location.search);
         let id = params.get("id");
+        if(id && id != <?=$_SESSION["userID"]?>) $("form").html("");
         console.log("id", id);
         if(!id) id = <?=$_SESSION["userID"]?>;
+
         
-        $.post(url, {uid: id})
+        $.post(getURL, {uid: id})
         .done(data => {
             console.log("username", data);
             if(data.length == 0){
@@ -83,6 +82,14 @@
             if(data.bio) bio = data?.bio;
             $("#bio").text(bio);
         });
+
+        $("#delProfile").click(() => {
+            $.post("<?=$this->url?>api/delProfile", {uid: id ? id : $_SESSION["userID"]})
+            .done(resp => {
+                console.log(resp);
+                window.location.replace(resp.url);
+            });
+        })
     </script>
 
 </html>

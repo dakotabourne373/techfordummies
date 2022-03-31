@@ -12,7 +12,7 @@ session_start();
 // Parse the URL
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 //TODO: CHANGE THIS
-$path = str_replace("/db2nb/techfordummies/", "", $path);
+$path = str_replace("/techfordummies/", "", $path);
 $parts = explode("/", $path);
 $temp = [];
 

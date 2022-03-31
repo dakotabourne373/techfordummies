@@ -4,8 +4,8 @@
 
 class Controller {
     private $db;
-    // private $url = "/techfordummies/";
-    private $url = "/db2nb/techfordummies/";
+    private $url = "/techfordummies/";
+    // private $url = "/db2nb/techfordummies/";
 
     public function __construct() {
         $this->db = new Database();
@@ -80,17 +80,16 @@ class Controller {
             echo "Nice Try Dummy...";
             return;
         }
-        if(isset($post["delete"])){
-            $stmt = $this->db->query("delete from userbookmarks where uid = ?", "i", $_SESSION["userID"]);
-            $data = $this->db->query("delete from research where userID = ?", "i", $_SESSION["userID"]);
-            if($data !== false){
-                $stmt = $this->db->query("delete from users where id = ?", "i", $_SESSION["userID"]);
-                if($data !== false){
-                    header("Location: {$this->url}logout/");
-                    return;
-                }
-            }
-        }
+        if($_SESSION["userID"] != $_POST["uid"]) return;
+        $stmt = $this->db->query("delete from user where uid = ?", "i", $_POST["uid"]);
+
+        // if($stmt !== false){
+        //     header("Location: {$this->url}logout/");
+        //     return;
+        // }
+        $data["url"] = "{$this->url}logout/";
+        header("Content-Type: application/json");
+        echo json_encode($data, JSON_PRETTY_PRINT);
     }
     
     private function getProfile() {
