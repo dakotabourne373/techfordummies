@@ -1,0 +1,127 @@
+/* 
+Dakota Bourne - db2nb
+Matthew Reid - mrr7rn
+*/
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #e7e7e7!important;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    /* background-color:  #f3d5b6!important; */
+    background-color:  #80839c!important;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+footer {
+    padding-top: 25px;
+    margin-top: 10px;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #211f31;
+}
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+    color: #444164;
+}
+
+@media screen and (max-width: 600px) {
+    .navbar-brand {
+      font-size: 2rem;
+      margin-left: 3%;
+    }
+    h3 {
+        font-size:1.3em
+    }
+  }
+
+@media screen and (min-width: 600px) {
+    .navbar-brand {
+        font-size: 3rem;
+        margin-left: 3%;
+    }
+    
+}
+
+.scrollable-table {
+    overflow-y:scroll; 
+    max-height:800px; 
+}
+
+.separate-nav-item {
+    border-left: 1px solid rgb(65, 64, 64);
+    height: inherit;
+}
+ 
+.nav-item {
+    margin-right: 60px;
+    margin-left: 60px;
+} 
+
+.landing {
+    padding-top:120px;
+    flex: 1 0 auto;
+}
+
+.researchdisplay {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.uvaTitle {
+    font-family: Georgia;
+}
+
+.primary-footer {
+    background-color:  #f3d5b6!important;
+    /* flex: 1; */
+    flex-shrink: 0;
+}
+
+.table-bg {
+    background-color: #ebeced;
+}
+
+/* idea for multi column footer: https://webdesign.tutsplus.com/tutorials/how-to-build-a-responsive-multi-level-sticky-footer-with-flexbox--cms-33341*/
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+ 
+.bottom-nav {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media only screen and (min-width: 477px) {
+    .bottom-nav {
+      justify-content: space-evenly;
+    }
+}
+
+footer a {
+    text-decoration: none;
+    color: rgba(0,0,0,.55);
+}
+
+.copyright {
+    justify-content: center;
+    background-color: rgb(108, 112, 149);
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-group:user-invalid {
+    border-color: red;
+}
