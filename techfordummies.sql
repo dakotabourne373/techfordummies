@@ -1,11 +1,12 @@
--- CREATE DATABASE techfordummies;
--- USE techfordummies;
-USE db2nb;
+CREATE DATABASE techfordummies;
+USE techfordummies;
+-- USE db2nb;
 CREATE TABLE `User`(
     uid int NOT NULL AUTO_INCREMENT,
     username varchar(15) NOT NULL,
     password text NOT NULL,
     join_date date NOT NULL default current_timestamp(),
+    total_posts int NOT NULL default 0,
     bio text,
     PRIMARY KEY (uid)
 );

@@ -125,3 +125,11 @@ footer a {
 .form-group:user-invalid {
     border-color: red;
 }
+
+/* .columns{
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+} */

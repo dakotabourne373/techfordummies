@@ -9,6 +9,12 @@ spl_autoload_register(function($classname) {
 
 session_start();
 
+/*
+Change this variable to match how the url would look on your localhost's browser
+e.g. on my xampp I would access it as localhost/techfordummies/, so i set the variable to "/techfordummies/"
+if your system has sub folders you need to include them
+e.g. if you access this project with localhost/cs4750/project/blue/green/, you would set the variable equal to "/cs4750/project/blue/green/"
+*/
 $url = "/techfordummies/";
 
 // Parse the URL

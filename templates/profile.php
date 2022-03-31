@@ -32,8 +32,36 @@
 <body>
     <?php include "templates/header.php"?>
 
-    <div class="container landing">
-        <h3>
+    <div class="container-fluid landing container">
+	<div class="row">
+
+		<div class="col-md-6">
+			<h2>
+            <span id="username"> </span>
+			</h2>
+			<p>
+            <span id="join_date"> </span> | Total posts
+			</p>
+
+		</div>
+		<div class="col-md-6">
+			<h2>
+				Bio
+			</h2>
+			<p>
+            <span id="bio"> </span>
+			</p>
+
+		</div>
+        <div id="dangerdanger">
+            <button type="submit" class="btn btn-danger" id="delProfile" >DELETE PROFILE</button>
+        </div>
+	</div>
+
+</div>
+
+    <!-- <div class="container landing">
+         <h3>
             <div>
                 Username: <span id="username"> </span>
             </div>
@@ -46,15 +74,11 @@
             Bio: <span id="bio"> </span>
             </div>
         </h3>
-        <!-- <h3>
-            Email: <?=$_SESSION["email"]?>
-        </h3> -->
-        <h3>
 
-        </h3>
-        <button type="submit" class="btn btn-danger" id="delProfile" >DELETE PROFILE</button>
-        <input type="hidden" name="delete" value="1" />        
-    </div>
+        <div id="dangerdanger">
+            <button type="submit" class="btn btn-danger" id="delProfile" >DELETE PROFILE</button>
+        </div>
+    </div> -->
 
     <?php include "templates/footer.php"?>
 </body>
@@ -63,7 +87,7 @@
 
         const params = new URLSearchParams(window.location.search);
         let id = params.get("id");
-        if(id && id != <?=$_SESSION["userID"]?>) $("form").html("");
+        if(id && id != <?=$_SESSION["userID"]?>) $("#dangerdanger").html("");
         console.log("id", id);
         if(!id) id = <?=$_SESSION["userID"]?>;
 
@@ -72,7 +96,7 @@
         .done(data => {
             console.log("username", data);
             if(data.length == 0){
-                $("div.container").html($(`<div class='alert alert-danger'>Something has gone wrong</div>`));
+                $("div.container").html($(`<div class='alert alert-danger'>This user does not exist!</div>`));
                 return;
             }
 
@@ -87,7 +111,7 @@
             $.post("<?=$this->url?>api/delProfile", {uid: id ? id : $_SESSION["userID"]})
             .done(resp => {
                 console.log(resp);
-                window.location.replace(resp.url);
+                if(resp.url !== undefinded) window.location.replace(resp.url);
             });
         })
     </script>
