@@ -9,14 +9,16 @@ spl_autoload_register(function($classname) {
 
 session_start();
 
+$url = "/techfordummies/";
+
 // Parse the URL
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 //TODO: CHANGE THIS
-$path = str_replace("/techfordummies/", "", $path);
+$path = str_replace($url, "", $path);
 $parts = explode("/", $path);
 $temp = [];
 
-$remote = new Controller();
+$remote = new Controller($url);
 for($i = 1; $i < count($parts); $i++){
     if($parts[$i] != ""){
         $temp[] = $parts[$i];

@@ -4,11 +4,12 @@
 
 class Controller {
     private $db;
-    private $url = "/techfordummies/";
+    private $url;
     // private $url = "/db2nb/techfordummies/";
 
-    public function __construct() {
+    public function __construct($newURL) {
         $this->db = new Database();
+        $this->url = $newURL;
     }
 
     public function isLoggedIn(){
