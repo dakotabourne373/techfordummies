@@ -40,7 +40,7 @@
                 <form action="<?="{$this->url}signup/"?>" method="post">
                 <div class="mb-3">
                         <label for="name" class="form-label">Username</label>
-                        <input required type="text" class="form-control" id="name" name="name" placeholder="Jane Doe"/>
+                        <input required type="text" class="form-control" id="name" name="name" placeholder="db2nb"/>
                     </div>
                     <!-- <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
