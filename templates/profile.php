@@ -111,7 +111,7 @@
             $.post("<?=$this->url?>api/delProfile", {uid: id ? id : $_SESSION["userID"]})
             .done(resp => {
                 console.log(resp);
-                if(resp.url !== undefinded) window.location.replace(resp.url);
+                if(resp.url !== undefined) window.location.replace(resp.url);
             });
         })
     </script>
