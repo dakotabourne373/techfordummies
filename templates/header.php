@@ -22,7 +22,7 @@
         </ul>
     </div>
 </nav>" : "<nav class='navbar fixed-top navbar-expand-sm navbar-light bg-light'><a class='navbar-brand uvaTitle'
-href='{$this->url}index/' style='color: #232d4b'>TechForDummies</a><button class='navbar-toggler' type='button'
+href='{$this->url}index/' style='color: #211f31'>TechForDummies</a><button class='navbar-toggler' type='button'
 data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent'
 aria-expanded='false' aria-label='Toggle navigation'><span class='navbar-toggler-icon'></span></button>
 <div class='collapse navbar-collapse' id='navbarSupportedContent'>
