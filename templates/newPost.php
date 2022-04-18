@@ -64,7 +64,7 @@
     <script type="text/javascript">
         let body = $("div.container").children().clone();
         $("div.container").text("LOADING");
-
+        // retrieve category options
         $.get("<?= $this->url ?>api/getCategories")
             .done(data => {
                 $("div.container").html(body);
@@ -76,7 +76,7 @@
                             id: data[i]?.catID
                         }).text(data[i]?.cname));
                 }
-
+                // creates button to make post
                 $("#target").submit(function(e) {
                     let url = "<?= $this->url ?>api/createPost";
 

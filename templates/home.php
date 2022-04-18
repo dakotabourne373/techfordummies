@@ -23,7 +23,7 @@
     <title>TechForDummies</title>
 </head>
 
-<body class="bg loading">
+<body class="bg">
     <?php include "templates/header.php" ?>
 
 
@@ -109,6 +109,7 @@
     if (category) {
         const url = "<?= $this->url ?>api/getCategorizedPosts";
 
+        //Get the posts under the specified category
         $.get(url + `?category=${category}`)
             .done(data => {
                 loadedData = data;
@@ -122,10 +123,13 @@
                 for (let i = (curPage - 1) * 10; i < 10; i++) {
                     if (i == data.length) break;
                     let row = temp.clone();
+
+                    //loads data into the row
                     row.find("#title").text(data[i]?.title);
                     row.find("#posted").text(data[i]?.date_posted);
-                    // row.find("#2").remove();
                     row.find("#author").text(data[i]?.username)
+
+                    //image functionality
                     let img = row.find("img");
                     img.on('click', () => {
                         window.location.href = ("<?= $this->url ?>profile/?id=" + data[i]?.uid)
@@ -137,7 +141,8 @@
                         row.addClass("hover");
                         img.removeClass("imghover");
                     })
-                    // row.addClass("pb-4");
+
+                    //Clicking functionality for the row
                     row.click((e) => {
                         if (e.target == img[0]) return;
                         console.log("img", img[0]);
@@ -178,6 +183,8 @@
                     let row = temp.clone();
                     row.find("#title").text(data[i]?.cname);
                     row.find("#posted").text("");
+
+                    // Like functionality for Categories
                     let thumbBtn = $('<button aria-label="postLike" type="button" class="btn btn-outline-secondary mb-1" id="thumbBtn"></button>');
                     let thumb = $(`<i class="bi" id="likeIcon"></i>`);
                     thumb.addClass(data[i]?.liked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up");
@@ -185,25 +192,28 @@
                         let url = "<?= $this->url ?>";
                         const hasClass = thumb.hasClass("bi-hand-thumbs-up-fill");
                         url += hasClass ? "api/removeCategoryLike" : "api/addCategoryLike";
+                        //removes or adds like depending on the state of the button
                         $.post(url, {
                                 catID: data[i]?.catID
                             })
                             .done(data => {
-                                console.log("before", data);
                                 if (data?.error) return;
+
+                                //toggles the state of the button
                                 thumb.removeClass(hasClass ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up");
                                 thumb.addClass(hasClass ? "bi-hand-thumbs-up" : "bi-hand-thumbs-up-fill");
-                                console.log("after", data);
-
                             });
                     })
                     console.log(thumbBtn[0]);
                     thumbBtn.append(thumb);
                     row.find("#2").html(thumbBtn);
+
                     row.addClass("pb-4");
                     row.click((e) => {
+                        //Allows like button to be clicked
                         if (e.target == thumb[0]) return;
                         if (e.target == thumbBtn[0]) return;
+
                         window.location.href = ("<?= $this->url ?>posts/?category=" + data[i]?.catID);
                     })
                     row.hover(() => {
@@ -216,17 +226,14 @@
             })
     }
 
-    $("body").removeClass("loading");
-
+    //
     function generatePagination(totalPages) {
         // adds the previous button functionality
         var element = $("body").find("[aria-label='Previous']");
 
         element.click(() => {
-            console.log("current page before", curPage);
             let temporary = curPage;
             curPage = Math.max(curPage - 1, 1);
-            console.log("current page after", curPage);
             if (temporary != curPage) {
                 $(".active").removeClass("active");
                 let all_a = $(`#${curPage}`).addClass("active");
@@ -257,11 +264,10 @@
             if (i == 0) num.addClass("active");
             num.append($(`<a class="page-link" href="#">${i + 1}</a>`));
             num.click(() => {
-                console.log("current page before", curPage);
                 curPage = num.text();
-                console.log("current page after", curPage)
                 $(".active").removeClass("active");
                 num.addClass("active");
+
                 generateNewPage();
             })
             $("#next").before(num);
@@ -272,38 +278,56 @@
         console.log(loadedData);
         console.log(temp);
         $("#posts").html("");
+
+        //loading category section
         if (loadingCat) {
             let maximum = ((curPage - 1) * 10) + 10
+            //for each category, create a row
             for (let i = maximum - 10; i < maximum; i++) {
                 if (i == loadedData.length) return;
                 let row = temp.clone();
+
+                // load category data into row
                 row.find("#title").text(loadedData[i]?.cname);
                 row.find("#posted").text("");
                 row.find("#2").remove();
                 row.addClass("pb-4");
+
+                //click category takes you to posts page that loads the posts in the selected category 
                 row.click(() => {
                     window.location.href = ("<?= $this->url ?>posts/?category=" + loadedData[i]?.catID);
                 })
+
+                // hover functionality to change background of currently hovered row
                 row.hover(() => {
                     row.addClass("hover");
                 }, () => {
                     row.removeClass("hover");
                 })
+
+                //creates the row
                 $("#posts").append(row);
             }
+            //loading user questions
         } else {
             let maximum = ((curPage - 1) * 10) + 10
+            //For each item on the current page, create the row
             for (let i = maximum - 10; i < maximum; i++) {
                 if (i == loadedData.length) break;
                 let row = temp.clone();
+
+                // Load the data into the row
                 row.find("#title").text(loadedData[i]?.title);
                 row.find("#posted").text(loadedData[i]?.date_posted);
-                // row.find("#2").remove();
                 row.find("#author").text(loadedData[i]?.username)
+
+                //Clicking image takes user to profile page
                 let img = row.find("img");
                 img.on('click', () => {
                     window.location.href = ("<?= $this->url ?>profile/?id=" + loadedData[i]?.uid)
                 });
+
+                // hover functionality to add blur to image
                 img.hover(() => {
                     row.removeClass("hover");
                     img.addClass("imghover");
@@ -311,22 +335,26 @@
                     row.addClass("hover");
                     img.removeClass("imghover");
                 })
-                // row.addClass("pb-4");
+
+                //Clicking row takes user to post details page
                 row.click((e) => {
+                    //Allows image to be clicked
                     if (e.target == img[0]) return;
-                    console.log("img", img[0]);
-                    console.log("tager", e.target);
-                    console.log("curtarget", e.currentTarget)
                     window.location.href = ("<?= $this->url ?>post/?id=" + loadedData[i]?.pid);
                 });
+
+                // hover functionality to change background of the row
                 row.hover(() => {
                     row.addClass("hover");
                 }, () => {
                     row.removeClass("hover");
                 });
+
+                //creates row
                 $("#posts").append(row);
             }
-            console.log("hit");
+
+            //export button functionality
             let exportBtn = $("<button type='submit' class='btn btn-secondary mb-1' id='exportBtn'>Export</button>");
             exportBtn.click(() => {
                 window.location.href = "<?= $this->url ?>api/getCategorizedPosts/?category=" + category;

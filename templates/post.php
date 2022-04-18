@@ -30,7 +30,7 @@
 
         <div class="container-fluid">
 
-            <!-- post section -->
+            <!-- post section template -->
             <div class="row border border-dark rounded bg-light pt-2 pb-2 mb-2" id="post">
                 <div class="col-md-2 p-1 border-secondary border-end align-items-center" style="text-align: center">
                     <img alt="Bootstrap Image Preview" width="75" height="75" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded-circle" />
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <!-- comment section -->
+        <!-- comment section template -->
         <div class="container-fluid pl-3" id="commentDiv">
             <div class="row" id="comment">
                 <div class="col-md-1" style="display: flex; justify-content: center; align-items: center;">
@@ -94,33 +94,10 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="row mb-2">
-            <div class="col-md-1" style="display: flex; justify-content: center; align-items: center;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="currentColor" class="bi bi-arrow-return-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
-                </svg>
-            </div>
-            <div class="col row border border-dark rounded bg-light pt-2 pb-2 mb-2 ml-3">
-                <div class="col-md-2 p-1 border-secondary border-end">
-                    <img alt="Bootstrap Image Preview" width="75" height="75" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
-                    <h4 id="">
-                        User 2
-                    </h4>
-                    <h4>
-                        4/14/2022
-                    </h4>
-                </div>
-                <div class="col-md-10">
-                    <p>
-                        Cus smelly person. yes. bad man. feel bad bout self.
-                    </p>
-                </div>
-            </div>
-        </div> -->
-
         </div>
 
         <?php
+        // if user is logged in then allow them to comment, else prompt them to login
         $commentText = isset($_SESSION["userID"]) ? '<form id="commentForm" style="padding-left: 10%" class="container mt-2">
             <h3 style="text-align: center">
                 Add your comment!
@@ -145,14 +122,16 @@
     $("div#commentDiv").html("");
     let delBtn = $("<button class='btn btn-danger'>Delete</button>");
 
+    // Gets the data for the current post
     const url = "<?= $this->url ?>api/getPost";
-
     $.get(url + `?id=${id}`)
         .done(data => {
             console.log(data);
             if (data["error"]) {
-                $("div.container").html("<div class='alert alert-danger'>Yo dawg somethign aint right</div>");
+                $("div.container").html("<div class='alert alert-danger'>An error has occurred on the page, please go back and try again</div>");
             } else {
+
+                //loads base post data
                 $("#postUsername").text(data?.post[0]?.username);
                 $("#postDate").text(data?.post[0]?.date_posted);
                 $("#postTitle").text(data?.post[0]?.title);
@@ -160,6 +139,7 @@
                 $("#postLikes").text(data?.post[0]?.total_likes);
 
                 <?php
+                //if the user is logged in, then we check if the logged in user matches the creator of the post, if so add the delete button, and its functionality
                 if (isset($_SESSION["userID"])) {
                     echo "if ({$_SESSION['userID']} == data?.post[0]?.uid) {
                     let btn = $(`<button type='submit' class='btn btn-danger mb-1' id='delPost'>DELETE</button>`);
@@ -181,10 +161,15 @@
                 }
                 ?>
 
+                //liked and bookmark functionality for the post
                 var isLiked = data?.post?.liked;
                 var isBookmarked = data?.post?.bookmarked;
+
+                //initial state
                 $("#likeIcon").addClass(isLiked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up");
                 $("#bookmarkIcon").addClass(isBookmarked ? "bi-star-fill" : "bi-star");
+
+                //if the like is clicked, then we remove or add the like depending on the state
                 $("#postLike").click(() => {
                     let url = "<?= $this->url ?>";
                     url += isLiked ? "api/removeLike" : "api/addLike";
@@ -200,6 +185,8 @@
                             isLiked = !isLiked;
                         });
                 });
+
+                // if the bookmark button is clicked, the nwe remove or add the bookmark depending on the state
                 $("#bookmark").click(() => {
                     let url = "<?= $this->url ?>";
                     url += isBookmarked ? "api/removeBookmark" : "api/addBookmark";
@@ -214,12 +201,17 @@
                             isBookmarked = !isBookmarked;
                         });
                 });
+
+                //adds the comment data into the page
                 data?.comments.forEach(c => {
                     let temp = commentTemplate.clone();
+                    //loads the base data of the comment
                     temp.find("#commentUsername").text(c?.username);
                     temp.find("#commentDate").text(c?.date_posted);
                     temp.find("#commentText").text(c?.text);
                     temp.find("#likes").text(c?.total_likes);
+
+                    //like button functionality
                     temp.find("i.bi").addClass(c?.liked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up");
                     temp.find("#like").click((e) => {
                         console.log(e);
@@ -241,7 +233,7 @@
                 })
             }
         });
-
+    // on form submit, adds comment to database
     $("#commentForm").submit(e => {
         const url = "<?= $this->url ?>api/addComment";
         $.post(url, {

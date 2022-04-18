@@ -168,7 +168,7 @@
         })
         .done(data => {
             console.log("data", data);
-
+            // if user is logged in and on their own profile, then display their saved posts and their own posts
             if (id == "<?= isset($_SESSION["userID"]) ? $_SESSION["userID"] : 0 ?>") {
                 loadedSaved = data?.savedPosts;
                 loadedOwned = data?.myPosts;
@@ -197,18 +197,23 @@
                 $("#savedPosts").remove();
 
             }
-
+            // check user exists
             if (data.length == 0) {
                 $("div.container").html($(`<div class='alert alert-danger'>This user does not exist!</div>`));
                 return;
             }
+            // fill in user information 
             $("#username").text(data?.profile?.username);
             $("#join_date").text(data?.profile?.join_date);
             var bio = "This user does not have a bio";
             if (data?.profile?.bio) bio = data?.profile?.bio;
             $("#bio").text(bio);
+
+            // sets up buttons to delete profile and edit bio
             let delBtn = $('<button type="submit" class="btn btn-danger" id="delProfile">DELETE PROFILE</button>');
             let followBtn = $('<button type="submit" class="btn" id="followProfile" ></button>');
+
+            // depeing on if the page is the current users profile or another users profile adds follow button
             if (id && id != <?= isset($_SESSION["userID"]) ? $_SESSION["userID"] : 0 ?>) {
                 followBtn.addClass(data?.isFollowed ? "btn-warning" : "btn-secondary");
                 followBtn.text(data?.isFollowed ? "Unfollow User" : "Follow User");
@@ -224,6 +229,7 @@
                 });
                 $("#dangerdanger").html(followBtn);
             } else {
+                // adds delete button, and bio editing functionality
                 <?php
                 if (isset($_SESSION['userID'])) {
                     echo "delBtn.click(() => {
@@ -259,6 +265,8 @@
         });
 
     function generateSavedPagination() {
+
+        // adds previous page functionality to saved posts
         var element = $("body").find("[aria-label='savedPrevious']");
 
         element.click(() => {
@@ -274,6 +282,7 @@
             }
         });
 
+        // adds next page functionality to saved posts
         var element = $("body").find("[aria-label='savedNext']");
 
         element.click(() => {
@@ -288,6 +297,7 @@
             }
         });
 
+        // adds page number functionality to saved posts
         for (let i = 0; i < savedPages; i++) {
             let num = $(`<li class="page-item saved" id="savedNum${i+1}"></li>`);
             if (i == 0) num.addClass("active");
@@ -308,6 +318,8 @@
     function generateMyPagination() {
         var element = $("body").find("[aria-label='myPrevious']");
 
+        // adds previous page functionality to users own posts
+
         element.click(() => {
             console.log("current page before", myCurPage);
             let temporary = myCurPage;
@@ -321,6 +333,7 @@
             }
         });
 
+        // adds next page functionality to users own posts
         var element = $("body").find("[aria-label='myNext']");
 
         element.click(() => {
@@ -338,6 +351,7 @@
             }
         });
 
+        // adds page number functionality to users own posts
         for (let i = 0; i < myPages; i++) {
             let num = $(`<li class="page-item my" id="myNum${i+1}"></li>`);
             if (i == 0) num.addClass("active");
@@ -355,6 +369,7 @@
     }
 
     function generateSavedPage() {
+        // generates table of saved posts
         console.log(loadedSaved);
         console.log(temp);
         $("#savedPosts").html("");
@@ -395,6 +410,7 @@
     }
 
     function generateMyPage() {
+        // generates table of users own posts
         console.log(loadedOwned);
         console.log(temp);
         $("#myPosts").html("");

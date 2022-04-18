@@ -594,6 +594,7 @@ class Controller
                 $data["error2"] = "";
             }
         } else {
+            //else, check if the profile is a followed user or no
             $ret = $this->db->query("SELECT * FROM FollowedUsers WHERE uid = ? AND fuid = ?", "ii", $_SESSION["userID"], $_POST["uid"]);
 
             if ($ret != false) {
