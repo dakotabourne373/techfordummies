@@ -425,6 +425,7 @@ class Controller
         if (!isset($_GET["id"])) {
             $data["error"] = "true";
         } else {
+            //get post details
             $ret = $this->db->query("SELECT username, uid, date_posted, title, text, total_likes FROM Post NATURAL JOIN User WHERE pid = ?", "i", $_GET["id"]);
 
             if ($ret != false) {
@@ -436,6 +437,8 @@ class Controller
                 } else {
                     $data["post"]["liked"] = false;
                 }
+
+                //check if post is bookmarked
                 if (isset($_SESSION["userID"])) {
                     $ret = $this->db->query("SELECT * FROM Bookmarks WHERE uid = ? AND pid = ?", "ii", $_SESSION["userID"], $_GET["id"]);
                     $data["post"]["bookmarked"] = count($ret) > 0 ? true : false;
@@ -446,6 +449,7 @@ class Controller
                 $data["error"] = true;
             }
 
+            //get comments of the post
             $ret = $this->db->query("SELECT username, uid, date_posted, text, total_likes, cid FROM Comment NATURAL JOIN UserComments NATURAL JOIN User WHERE pid = ?", "i", $_GET["id"]);
 
             if ($ret != false) {
@@ -542,10 +546,6 @@ class Controller
         if ($_SESSION["userID"] != $_POST["uid"]) return;
         $stmt = $this->db->query("delete from user where uid = ?", "i", $_POST["uid"]);
 
-        // if($stmt !== false){
-        //     header("Location: {$this->url}logout/");
-        //     return;
-        // }
         $data["url"] = "{$this->url}logout/";
         header("Content-Type: application/json");
         echo json_encode($data, JSON_PRETTY_PRINT);
@@ -607,49 +607,6 @@ class Controller
         header("Content-Type: application/json");
         echo json_encode($data, JSON_PRETTY_PRINT);
     }
-
-    // private function editProfile()
-    // {
-    //     $request = file_get_contents("php://input");
-    //     $data = json_decode($request, true);
-    //     if (!isset($_SESSION["userID"]))
-    //         echo "Nice Try Dummy...";
-    //     if (isset($data["name"])) {
-    //         $res = $this->db->query("update users set name = ? where id = ?", "si", $data["name"], $_SESSION["userID"]);
-    //     }
-    // }
-
-    // private function jsonViewer()
-    // {
-    //     $data = $this->db->query("select * from research where id = ?;", "i", $_GET["id"]);
-    //     $item = [];
-    //     $user = [];
-    //     $message = "";
-    //     if ($data === false) {
-    //         // did not work
-    //         $message = "<div class='alert alert-danger'>Error: could not find the given research item</div>";
-    //     } else {
-    //         // worked
-    //         if (count($data) == 0) {
-    //             $message = "<div class='alert alert-danger'>Error: could not find the given research item</div>";
-    //         } else {
-    //             $item = $data[0];
-    //             $data = $this->db->query("select * from users where id = ?", "i", $item["userID"]);
-
-    //             if ($data !== false) {
-    //                 if (isset($data[0])) {
-    //                     $user = $data[0];
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     $item["name"] = $user["name"];
-    //     $item["uid"] = $user["id"];
-    //     $item["email"] = $user["email"];
-
-    //     header('Content-Type: application/json');
-    //     echo json_encode($item, JSON_PRETTY_PRINT);
-    // }
 
     private function profile()
     {
