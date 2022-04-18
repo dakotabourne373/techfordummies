@@ -1,8 +1,5 @@
 <?php
 //Dakota Bourne and Matthew Reid
-// https://cs4640.cs.virginia.edu/db2nb/connectuva/
-// Built Angular is in templates/angular/
-// Included the src for the angular app
 spl_autoload_register(function($classname) {
     include "classes/$classname.php";
 });
@@ -31,5 +28,3 @@ for($i = 1; $i < count($parts); $i++){
     }
 }
 $remote->run($parts[0], ...$temp);
-
-?>

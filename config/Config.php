@@ -5,11 +5,11 @@ namespace config;
 /**
  * Configuration File
  *
- * This file contains configuration for our application.  Note that
- * we are now storing the configuration as a class with fields!
+ * This file contains configuration for our application.
  */
 
-class Config {
+class Config
+{
 
     public static $DATABASE_HOST = "localhost"; // hostname (localhost)
 

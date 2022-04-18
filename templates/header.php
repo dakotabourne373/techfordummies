@@ -1,7 +1,7 @@
 <?php
 //Dakota Bourne and Matthew Reid
-    $authtenticated = isset($_SESSION["username"]);
-    $html = $authtenticated ? 
+$authtenticated = isset($_SESSION["username"]);
+$html = $authtenticated ?
     "<nav class='navbar fixed-top navbar-expand-xl navbar-light bg-light'>
         <a class='navbar-brand uvaTitle'
         href='{$this->url}index' style='color: #211f31'>TechForDummies</a><button class='navbar-toggler'
@@ -12,8 +12,6 @@
         <ul class='navbar-nav ml-auto'>
             <li class='nav-item'><a class='nav-link' href='{$this->url}posts/'>Posts<span class='sr-only'></span></a>
             </li>
-            <div class='separate-nav-item'></div>
-            <li class='nav-item'><a class='nav-link' href='{$this->url}index/'>About<span class='sr-only'></span></a></li>
             <div class='separate-nav-item'></div>
             <li class='nav-item'><a class='nav-link' href='{$this->url}profile/'
                 >My Profile<span class='sr-only'></span></a></li>
@@ -31,10 +29,6 @@ aria-expanded='false' aria-label='Toggle navigation'><span class='navbar-toggler
             </li>
 
             <div class='separate-nav-item'></div>
-
-    <li class='nav-item active'><a class='nav-link' href='{$this->url}index/'>About<span class='sr-only'></span></a>
-    </li>
-    <div class='separate-nav-item'></div>
     <li class='nav-item' style='margin-right: 20px;'><a class='nav-link' href='{$this->url}login/'
             data-theme='dark'>Login</a></li>
 </ul>

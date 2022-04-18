@@ -5,7 +5,7 @@ CREATE TABLE `User`(
     uid int NOT NULL AUTO_INCREMENT,
     username varchar(15) NOT NULL,
     password text NOT NULL,
-    join_date date NOT NULL default current_timestamp(),
+    join_date DATETIME NOT NULL default now(),
     total_posts int NOT NULL default 0,
     bio text,
     PRIMARY KEY (uid)
@@ -18,7 +18,7 @@ CREATE TABLE `Category`(
 CREATE TABLE `Post`(
     pid int NOT NULL AUTO_INCREMENT,
     uid int NOT NULL,
-    date_posted date NOT NULL default current_timestamp(),
+    date_posted DATETIME NOT NULL default now(),
     catID int NOT NULL,
     title text NOT NULL,
     text text NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `Post`(
 CREATE TABLE `Comment`(
     cid int NOT NULL AUTO_INCREMENT,
 	pid int NOT NULL,
-    date_posted date NOT NULL default current_timestamp(),
+    date_posted DATETIME NOT NULL default now(),
     text text NOT NULL,
     total_likes int default 0,
     PRIMARY KEY(cid),
@@ -75,6 +75,17 @@ CREATE TABLE `FollowedUsers`(
     FOREIGN KEY(fuid) REFERENCES User(uid) ON DELETE CASCADE
 );
 
+CREATE TABLE `User_Audit` (
+    log_date date NOT NULL,
+    who_update varchar(30) NOT NULL,
+    join_date date DEFAULT NULL,
+    uid int(11) DEFAULT NULL,
+    username varchar(15) NOT NULL,
+    total_posts int NOT NULL default 0,
+    old_bio text NOT NULL,
+    new_bio text NOT NULL
+);
+
 DELIMITER $$
 CREATE TRIGGER userliked AFTER INSERT ON UserLikes
 FOR EACH ROW 
@@ -109,7 +120,7 @@ CREATE TRIGGER userdislikedcom
 AFTER DELETE
 ON commentlikes FOR EACH ROW
 BEGIN
-    CALL decrementLike (OLD.cid);
+    CALL decrementComLike (OLD.cid);
 END$$
 DELIMITER ;
 
@@ -118,7 +129,7 @@ CREATE PROCEDURE decrementLike(IN id INT)
 BEGIN
 	UPDATE post AS p
     SET p.total_likes = p.total_likes - 1
-    WHERE p.cid = id AND p.total_likes > 0;
+    WHERE p.pid = id AND p.total_likes > 0;
 END$$
 DELIMITER ;
 
@@ -131,18 +142,15 @@ BEGIN
 END$$
 DELIMITER ;
 
-/*
 DELIMITER $$
-CREATE PROCEDURE deletePost(IN id INT)
+CREATE TRIGGER user_auditTrail BEFORE UPDATE ON User
+FOR EACH ROW
 BEGIN
-DELETE FROM commentlikes WHERE cid IN (SELECT C.cid FROM comment C WHERE C.pid = id);
-DELETE FROM userlikes WHERE cid IN (SELECT C.cid FROM comment C WHERE C.pid = id);
-DELETE FROM comment WHERE pid = id;
-DELETE FROM userlikes WHERE pid = id;
-DELETE FROM post WHERE pid = id;
+    INSERT INTO user_audit
+    VALUES (CURRENT_DATE, CURRENT_USER, old.join_date, old.uid,
+    old.username, old.total_posts, old.bio, new.bio);
 END$$
 DELIMITER ;
-*/
 
 INSERT INTO User (username, password, bio) VALUES ('crazykatz', '$2y$10$J9zucgj9VqtIUDbHc73/AuZ7VsREdrcri8dxhyV/LBQdK3jcEbCGO', 'Hey! I have a bio');
 INSERT INTO User (username, password, bio) VALUES ('pugluver', '$2y$10$J9zucgj9VqtIUDbHc73/AuZ7VsREdrcri8dxhyV/LBQdK3jcEbCGO', 'I made this account to post literally once');
@@ -184,10 +192,10 @@ INSERT INTO Comment(pid, text) VALUES(1, 'Have you tried downloading more RAM?')
 INSERT INTO Comment(pid, text) VALUES(1, 'No, where do you do that?');
 INSERT INTO Comment(pid, text) VALUES(1, 'downloadmoreram.com');
 INSERT INTO Comment(pid, text) VALUES(1, 'Thanks, now my computer just doesnt work...');
-INSERT INTO UserComments VALUES(7, 1);
-INSERT INTO UserComments VALUES(2, 2);
-INSERT INTO UserComments VALUES(7, 3);
-INSERT INTO UserComments VALUES(2, 4);
+INSERT INTO UserComments VALUES(2, 1);
+INSERT INTO UserComments VALUES(7, 2);
+INSERT INTO UserComments VALUES(2, 3);
+INSERT INTO UserComments VALUES(7, 4);
 INSERT INTO UserLikes VALUES(4, 1);
 INSERT INTO UserLikes VALUES(2, 1); 
 INSERT INTO CommentLikes VALUES (7, 2);

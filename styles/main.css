@@ -35,6 +35,21 @@ footer {
     color: #444164;
 }
 
+.hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.imghover {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    cursor: pointer;
+  }
+
+.loading {
+    cursor:wait;
+}
+
 @media screen and (max-width: 600px) {
     .navbar-brand {
       font-size: 2rem;
@@ -124,6 +139,15 @@ footer a {
 
 .form-group:user-invalid {
     border-color: red;
+}
+
+.padd{
+    padding-left: 10%;
+    padding-right: 10%; 
+}
+
+.coloring{
+    border-color:#989c9f69;
 }
 
 /* .columns{
