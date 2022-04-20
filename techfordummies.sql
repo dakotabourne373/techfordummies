@@ -146,9 +146,13 @@ DELIMITER $$
 CREATE TRIGGER user_auditTrail BEFORE UPDATE ON User
 FOR EACH ROW
 BEGIN
-    INSERT INTO user_audit
+    IF old.bio IS NULL THEN INSERT INTO user_audit
+    VALUES (CURRENT_DATE, CURRENT_USER, old.join_date, old.uid,
+    old.username, old.total_posts, '', new.bio);
+    ELSE INSERT INTO user_audit
     VALUES (CURRENT_DATE, CURRENT_USER, old.join_date, old.uid,
     old.username, old.total_posts, old.bio, new.bio);
+    END IF;
 END$$
 DELIMITER ;
 
